@@ -267,11 +267,100 @@ heyclaw-windows/
 
 ## 🔗 參考資源
 
+### 文件
 - [Tauri v2 文件](https://v2.tauri.app/)
 - [cpal - Rust 音訊](https://github.com/RustAudio/cpal)
 - [enigo - 輸入模擬](https://github.com/enigo-rs/enigo)
 - [Groq API 文件](https://console.groq.com/docs)
-- [heyclaw (原版 macOS)](https://github.com/xdite/heyclaw) ← 待確認是否公開
+
+### 開源參考專案
+| 專案 | 連結 | 說明 |
+|------|------|------|
+| **Handy** ⭐ | https://github.com/cjpais/Handy | 開源跨平台語音輸入，Tauri + Rust，支援離線 Whisper |
+| heyclaw | (私有 repo by xdite) | macOS 語音輸入工具，整合 clawdbot |
+| Typeless | https://typeless.com | 商業 AI 語音輸入工具 |
+
+> **💡 Handy 是最佳參考！** 架構相似、開源、支援 Windows，可直接學習其 cpal + enigo 實作。
+
+---
+
+## 🚀 快速開始
+
+### 環境需求
+- Node.js 18+
+- Rust 1.70+
+- Windows 10/11
+
+### 開發指令
+```bash
+# 1. Clone 專案
+git clone https://github.com/tomkuo1124/heyclaw-windows.git
+cd heyclaw-windows
+
+# 2. 安裝前端依賴
+yarn install
+
+# 3. 開發模式
+yarn tauri dev
+
+# 4. 建構發布版
+yarn tauri build
+```
+
+---
+
+## ⚠️ 風險評估與備案
+
+| 風險 | 可能性 | 影響 | 備案 |
+|------|--------|------|------|
+| Groq API 限流/不穩定 | 中 | 高 | 備案 1：本地 Whisper（參考 Handy）<br>備案 2：OpenAI Whisper API |
+| enigo Windows 相容性問題 | 低 | 高 | 備案：使用 Windows API `SendInput` 直接呼叫 |
+| 全域快捷鍵衝突 | 中 | 中 | 提供自訂快捷鍵設定 |
+| 麥克風權限被拒 | 中 | 高 | 顯示清楚的權限引導 UI |
+| LLM 後處理延遲 | 中 | 低 | 提供「跳過後處理」選項 |
+
+---
+
+## 🎯 MVP 定義
+
+### Phase 1 結束時（Week 1）可 Demo：
+- ✅ 系統托盤圖示顯示
+- ✅ 按 Alt+Space 觸發事件（console log）
+- ✅ 可錄製麥克風聲音並播放
+- ✅ 可模擬輸入文字到記事本
+
+### Phase 2 結束時（Week 2）可 Demo：
+- ✅ **完整語音聽寫流程**：Alt+Space → 說話 → 文字出現在游標
+- ✅ 錄音中顯示小藥丸 Overlay
+- ✅ 支援中/英文
+
+### 最小可用版本 (MVP)：
+> Phase 2 完成 = MVP 達成
+
+---
+
+## 🧪 測試策略
+
+### 單元測試
+| 模組 | 測試項目 |
+|------|----------|
+| audio.rs | 錄音開始/停止、WAV 編碼正確性 |
+| whisper.rs | API 呼叫格式、錯誤處理 |
+| input.rs | 特殊字元輸入、中文輸入 |
+
+### 整合測試
+| 場景 | 測試項目 |
+|------|----------|
+| 快樂路徑 | Alt+Space → 說「你好」→ 游標出現「你好」 |
+| 長錄音 | 30 秒以上的語音 |
+| 快速連按 | 連續多次 Alt+Space |
+| 無網路 | API 失敗時的錯誤處理 |
+| 權限問題 | 麥克風權限被拒時的提示 |
+
+### 相容性測試
+- Windows 10 (21H2+)
+- Windows 11
+- 不同麥克風裝置
 
 ---
 
@@ -294,5 +383,6 @@ heyclaw-windows/
 
 ---
 
-*文件版本：v1.0*
+*文件版本：v1.1*
 *更新日期：2026-02-23*
+*補充：兔兔 🐰 - Handy 參考、Quick Start、風險評估、MVP 定義、測試策略*
